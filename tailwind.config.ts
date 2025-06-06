@@ -26,39 +26,39 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#1e3a8a',
+					DEFAULT: '#043638',
 					foreground: '#ffffff',
-					50: '#eff6ff',
-					100: '#dbeafe',
-					500: '#3b82f6',
-					600: '#2563eb',
-					700: '#1d4ed8',
-					800: '#1e40af',
-					900: '#1e3a8a'
+					50: '#f0f9ff',
+					100: '#e0f2fe',
+					500: '#043638',
+					600: '#0c343c',
+					700: '#043638',
+					800: '#043638',
+					900: '#043638'
 				},
 				secondary: {
-					DEFAULT: '#f1f5f9',
-					foreground: '#0f172a'
+					DEFAULT: '#EFEFEF',
+					foreground: '#043638'
 				},
 				destructive: {
 					DEFAULT: '#ef4444',
 					foreground: '#ffffff'
 				},
 				muted: {
-					DEFAULT: '#f8fafc',
-					foreground: '#64748b'
+					DEFAULT: '#EFEFEF',
+					foreground: '#868789'
 				},
 				accent: {
-					DEFAULT: '#f1f5f9',
-					foreground: '#0f172a'
+					DEFAULT: '#EFEFEF',
+					foreground: '#043638'
 				},
 				popover: {
 					DEFAULT: '#ffffff',
-					foreground: '#0f172a'
+					foreground: '#043638'
 				},
 				card: {
 					DEFAULT: '#ffffff',
-					foreground: '#0f172a'
+					foreground: '#043638'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -70,16 +70,22 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				corporate: {
-					blue: '#1e3a8a',
-					lightBlue: '#3b82f6',
-					gray: '#64748b',
-					lightGray: '#f1f5f9'
+				rmh: {
+					primary: '#043638',
+					secondary: '#0c343c',
+					accent: '#165A5D',
+					light: '#EFEFEF',
+					gray: '#868789',
+					darkGray: '#8b848b',
+					lightGray: '#9ca2a3',
+					white: '#FFFFFF',
+					black: '#000000'
 				}
 			},
 			fontFamily: {
-				sans: ['Inter', 'system-ui', 'sans-serif'],
-				heading: ['Poppins', 'system-ui', 'sans-serif']
+				sans: ['Raleway', 'system-ui', 'sans-serif'],
+				heading: ['Ruda', 'system-ui', 'sans-serif'],
+				body: ['Raleway', 'system-ui', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

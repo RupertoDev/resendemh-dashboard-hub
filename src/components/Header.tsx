@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, User, Shield, Building2 } from 'lucide-react';
+import { LogOut, User, Shield } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import RMHLogo from './RMHLogo';
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -21,23 +22,22 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm">
+    <header className="bg-white border-b border-rmh-lightGray shadow-sm">
       <div className="px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Building2 className="h-8 w-8 text-corporate-blue" />
-            <div>
-              <h1 className="text-xl font-heading font-bold text-corporate-blue">
+          <div className="flex items-center space-x-4">
+            <RMHLogo size="md" showText={true} />
+            <div className="hidden md:block">
+              <h1 className="text-xl font-heading font-bold text-rmh-primary">
                 Dashboards Corporativos
               </h1>
-              <p className="text-sm text-corporate-gray">Resende MH</p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-2 text-sm text-corporate-gray">
+            <div className="hidden md:flex items-center space-x-2 text-sm text-rmh-gray">
               <span>Bem-vindo,</span>
-              <span className="font-medium text-corporate-blue">{user?.name}</span>
+              <span className="font-medium text-rmh-primary">{user?.name}</span>
               {user?.role === 'admin' && (
                 <Shield className="h-4 w-4 text-amber-500" />
               )}
@@ -47,7 +47,7 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10">
-                    <AvatarFallback className="bg-corporate-blue text-white font-medium">
+                    <AvatarFallback className="bg-rmh-primary text-white font-medium">
                       {user ? getInitials(user.name) : 'U'}
                     </AvatarFallback>
                   </Avatar>
