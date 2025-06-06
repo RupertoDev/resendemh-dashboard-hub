@@ -39,7 +39,7 @@ const Header = () => {
               <span>Bem-vindo,</span>
               <span className="font-medium text-corporate-blue">{user?.name}</span>
               {user?.role === 'admin' && (
-                <Shield className="h-4 w-4 text-amber-500" title="Administrador" />
+                <Shield className="h-4 w-4 text-amber-500" />
               )}
             </div>
 
