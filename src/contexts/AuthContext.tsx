@@ -45,6 +45,23 @@ const mockUsers: User[] = [
   }
 ];
 
+// Função para gerar usuário a partir do email
+const generateUserFromEmail = (email: string): User => {
+  const namePart = email.split('@')[0];
+  const formattedName = namePart
+    .split('.')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+  
+  return {
+    id: Date.now().toString(),
+    name: formattedName,
+    email: email,
+    role: email === 'admin@resendemh.com.br' ? 'admin' : 'user',
+    department: 'Geral'
+  };
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -68,10 +85,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Find user in mock data
-    const foundUser = mockUsers.find(u => u.email === email);
-    
-    if (foundUser && password === '123456') { // Mock password
+    // Check password
+    if (password === '123456') {
+      // First check if user exists in mock data
+      let foundUser = mockUsers.find(u => u.email === email);
+      
+      // If not found, generate user from email
+      if (!foundUser) {
+        foundUser = generateUserFromEmail(email);
+      }
+      
       setUser(foundUser);
       localStorage.setItem('user', JSON.stringify(foundUser));
       setIsLoading(false);
