@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +7,10 @@ import { PDFDocument } from '@/contexts/PDFContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PDFCardProps {
   document: PDFDocument;
@@ -18,6 +21,8 @@ interface PDFCardProps {
 const PDFCard: React.FC<PDFCardProps> = ({ document, onEdit, onDelete }) => {
   const { user } = useAuth();
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('pt-BR', {
@@ -28,6 +33,44 @@ const PDFCard: React.FC<PDFCardProps> = ({ document, onEdit, onDelete }) => {
   };
 
   const canEdit = user?.role === 'admin' || document.uploadedBy === user?.email;
+
+  const generateThumbnail = async () => {
+    try {
+      const loadingTask = pdfjsLib.getDocument(document.fileUrl);
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+      
+      const viewport = page.getViewport({ scale: 1 });
+      const canvas = canvasRef.current;
+      
+      if (canvas) {
+        const context = canvas.getContext('2d');
+        if (context) {
+          // Set canvas size to match viewport with appropriate scale
+          const scale = 200 / viewport.width; // Scale to fit 200px width
+          const scaledViewport = page.getViewport({ scale });
+          
+          canvas.height = scaledViewport.height;
+          canvas.width = scaledViewport.width;
+          
+          const renderContext = {
+            canvasContext: context,
+            viewport: scaledViewport,
+          };
+          
+          await page.render(renderContext).promise;
+          setThumbnailUrl(canvas.toDataURL());
+        }
+      }
+    } catch (error) {
+      console.error('Error generating PDF thumbnail:', error);
+      setThumbnailUrl(null);
+    }
+  };
+
+  useEffect(() => {
+    generateThumbnail();
+  }, [document.fileUrl]);
 
   const handleDownload = () => {
     const link = window.document.createElement('a');
@@ -41,19 +84,30 @@ const PDFCard: React.FC<PDFCardProps> = ({ document, onEdit, onDelete }) => {
       <Card className="group hover:shadow-lg transition-all duration-300 border-gray-200 hover:border-rmh-primary/50 overflow-hidden">
         {/* PDF Thumbnail */}
         <div className="relative bg-gray-100">
-          <AspectRatio ratio={3/4} className="bg-gradient-to-br from-rmh-primary to-rmh-secondary">
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
-                <FileText className="h-12 w-12 text-rmh-primary mb-2" />
-                <div className="text-center">
-                  <div className="text-xs font-medium text-rmh-primary mb-1">PDF</div>
-                  <div className="text-xs text-rmh-gray truncate max-w-[80px]">
-                    {document.fileName.split('.')[0]}
+          <AspectRatio ratio={3/4} className="bg-white">
+            {thumbnailUrl ? (
+              <img 
+                src={thumbnailUrl} 
+                alt={`Miniatura de ${document.title}`}
+                className="w-full h-full object-contain p-2"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-rmh-primary to-rmh-secondary">
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+                  <FileText className="h-12 w-12 text-rmh-primary mb-2" />
+                  <div className="text-center">
+                    <div className="text-xs font-medium text-rmh-primary mb-1">PDF</div>
+                    <div className="text-xs text-rmh-gray truncate max-w-[80px]">
+                      Carregando...
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </AspectRatio>
+          
+          {/* Hidden canvas for thumbnail generation */}
+          <canvas ref={canvasRef} className="hidden" />
           
           {/* Category Badge */}
           <div className="absolute top-2 left-2">
