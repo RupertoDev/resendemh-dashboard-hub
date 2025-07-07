@@ -10,6 +10,7 @@ import { PDFProvider } from "@/contexts/PDFContext";
 import LoginForm from "@/components/LoginForm";
 import DashboardsPage from "@/pages/Dashboards";
 import DocumentsPage from "@/pages/Documents";
+import OrganogramPage from "@/pages/Organogram";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const AppContent = () => {
           <Route path="/" element={<DashboardsPage />} />
           <Route path="/dashboards" element={<DashboardsPage />} />
           <Route path="/documents" element={<DocumentsPage />} />
+          <Route path="/organogram" element={<OrganogramPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </PDFProvider>

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, User, Shield, LayoutDashboard, FileText } from 'lucide-react';
+import { LogOut, User, Shield, LayoutDashboard, FileText, Users } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   DropdownMenu,
@@ -67,6 +67,20 @@ const Header = () => {
                   Documentos
                 </Link>
               </Button>
+              <Button
+                variant={location.pathname === '/organogram' ? 'default' : 'ghost'}
+                size="sm"
+                asChild
+                className={location.pathname === '/organogram' 
+                  ? 'bg-rmh-primary hover:bg-rmh-secondary' 
+                  : 'text-rmh-primary hover:bg-rmh-light'
+                }
+              >
+                <Link to="/organogram">
+                  <Users className="h-4 w-4 mr-2" />
+                  Organograma
+                </Link>
+              </Button>
             </nav>
 
             <div className="hidden md:flex items-center space-x-2 text-sm text-rmh-gray">
@@ -110,6 +124,12 @@ const Header = () => {
                   <Link to="/documents">
                     <FileText className="mr-2 h-4 w-4" />
                     <span>Documentos</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer md:hidden">
+                  <Link to="/organogram">
+                    <Users className="mr-2 h-4 w-4" />
+                    <span>Organograma</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="md:hidden" />
